@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrinho de Compras</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+    }
+    .produtos, .carrinho {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .produto {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+    button {
+      background: #2a9d8f;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #21867a;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+    }
+    #total {
+      font-weight: bold;
+      font-size: 18px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Carrinho de Compras</h1>
+
+  <div class="produtos">
+    <h2>Produtos</h2>
+    <div class="produto">
+      <span>Camisa</span>
+      <span>R$ 50,00</span>
+      <button onclick="adicionarProduto('Camisa', 50)">Adicionar</button>
+    </div>
+    <div class="produto">
+      <span>Calça</span>
+      <span>R$ 120,00</span>
+      <button onclick="adicionarProduto('Calça', 120)">Adicionar</button>
+    </div>
+    <div class="produto">
+      <span>Tênis</span>
+      <span>R$ 200,00</span>
+      <button onclick="adicionarProduto('Tênis', 200)">Adicionar</button>
+    </div>
+  </div>
+
+  <div class="carrinho">
+    <h2>Seu Carrinho</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Preço</th>
+          <th>Quantidade</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody id="lista-carrinho"></tbody>
+    </table>
+    <p id="total">Total: R$ 0,00</p>
+  </div>
+
+  <script>
+    let carrinho = [];
+
+    function adicionarProduto(nome, preco) {
+      // Verifica se o produto já existe no carrinho
+      let produto = carrinho.find(item => item.nome === nome);
+      
+      if (produto) {
+        produto.quantidade++;
+      } else {
+        carrinho.push({ nome: nome, preco: preco, quantidade: 1 });
+      }
+      
+      atualizarCarrinho();
+    }
+
+    function atualizarCarrinho() {
+      let lista = document.getElementById("lista-carrinho");
+      lista.innerHTML = "";
+      let total = 0;
+
+      carrinho.forEach(item => {
+        let subtotal = item.preco * item.quantidade;
+        total += subtotal;
+
+        let row = `
+          <tr>
+            <td>${item.nome}</td>
+            <td>R$ ${item.preco.toFixed(2)}</td>
+            <td>${item.quantidade}</td>
+            <td>R$ ${subtotal.toFixed(2)}</td>
+          </tr>
+        `;
+        lista.innerHTML += row;
+      });
+
+      document.getElementById("total").innerText = "Total: R$ " + total.toFixed(2);
+    }
+  </script>
+
+</body>
+</html>

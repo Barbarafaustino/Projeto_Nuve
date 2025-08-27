@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loja simples</title>
+ 
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
+    .preco { font-weight: bold; margin: 8px 0; }
+    button { padding: 8px 12px; cursor: pointer; }
+    a { text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Minha Loja</h1>
+    <a href="carrinho.html">🛒 Ver carrinho</a>
+  </header>
+
+  <div class="grid" id="lista-produtos"></div>
+
+  <script>
+    // Produtos de exemplo
+    var produtos = [
+      { id: 1, nome: "Camiseta", preco: 49.90 },
+      { id: 2, nome: "Boné",     preco: 39.90 },
+      { id: 3, nome: "Caneca",   preco: 29.90 },
+      { id: 4, nome: "Mochila",  preco: 99.90 }
+    ];
+
+    // Renderiza cartões
+    function renderProdutos() {
+      var lista = document.getElementById('lista-produtos');
+      lista.innerHTML = '';
+      produtos.forEach(function(p) {
+        var card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${p.nome}</h3>
+          <div class="preco">R$ ${p.preco.toFixed(2)}</div>
+          <button onclick="adicionarAoCarrinho(${p.id})">Adicionar ao carrinho</button>
+        `;
+        lista.appendChild(card);
+      });
+    }
+
+    // Util: lê e grava carrinho no localStorage
+    function getCarrinho() {
+      var c = localStorage.getItem('carrinho');
+      return c ? JSON.parse(c) : []; // [{id, nome, preco, qtd}]
+    }
+    function setCarrinho(carrinho) {
+      localStorage.setItem('carrinho', JSON.stringify(carrinho));
+    }
+
+    // Adiciona item (se já existir, soma a quantidade)
+    function adicionarAoCarrinho(idProduto) {
+      var produto = produtos.find(function(p){ return p.id === idProduto; });
+      if (!produto) return;
+
+      var carrinho = getCarrinho();
+      var existente = carrinho.find(function(item){ return item.id === produto.id; });
+      if (existente) {
+        existente.qtd += 1;
+      } else {
+        carrinho.push({ id: produto.id, nome: produto.nome, preco: produto.preco, qtd: 1 });
+      }
+      setCarrinho(carrinho);
+      alert(`✅ ${produto.nome} adicionado!`);
+    }
+
+    renderProdutos();
+
+
+  </script>
+</body>
+</html>
